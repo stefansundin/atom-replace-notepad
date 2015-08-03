@@ -1,0 +1,18 @@
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Replace Notepad'
+      'submenu': [
+        {
+          'label': 'Replace Notepad'
+          'command': 'replace-notepad:replace'
+        },
+        {
+          'label': 'Restore Notepad'
+          'command': 'replace-notepad:restore'
+        }
+      ]
+    ]
+  }
+]

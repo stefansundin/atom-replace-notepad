@@ -1,0 +1,25 @@
+{
+  "name": "replace-notepad",
+  "main": "./lib/replace-notepad",
+  "version": "0.0.0",
+  "description": "Replace Notepad with Atom. (Windows)",
+  "keywords": [
+    "replace", "notepad", "windows"
+  ],
+  "contributors": [
+    "Stefan Sundin (https://stefansundin.com/)"
+  ],
+  "activationCommands": {
+    "atom-workspace": [
+      "replace-notepad:replace",
+      "replace-notepad:restore"
+    ]
+  },
+  "repository": "https://github.com/stefansundin/atom-replace-notepad",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}
