@@ -1,5 +1,5 @@
 {CompositeDisposable} = require 'atom'
-child_process = require 'child_process'
+spawn = require('child_process').spawn
 
 module.exports = ReplaceNotepad =
   subscriptions: null
@@ -13,7 +13,7 @@ module.exports = ReplaceNotepad =
     @subscriptions.dispose()
 
   replace: ->
-    child_process.spawn "#{process.env.USERPROFILE}\\.atom\\packages\\replace-notepad\\bin\\replace-notepad.exe", ["replace"]
+    spawn "#{process.env.USERPROFILE}\\.atom\\packages\\replace-notepad\\bin\\replace-notepad.exe", ["replace"]
 
   restore: ->
-    child_process.spawn "#{process.env.USERPROFILE}\\.atom\\packages\\replace-notepad\\bin\\replace-notepad.exe", ["restore"]
+    spawn "#{process.env.USERPROFILE}\\.atom\\packages\\replace-notepad\\bin\\replace-notepad.exe", ["restore"]
