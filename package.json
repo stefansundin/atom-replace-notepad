@@ -1,7 +1,7 @@
 {
   "name": "replace-notepad",
   "main": "./lib/replace-notepad",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Open Atom instead of Notepad. (Windows)",
   "keywords": [
     "replace",
