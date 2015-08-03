@@ -61,23 +61,12 @@ int restore() {
 }
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
-  // DBG("lpCmdLine: %s\n", lpCmdLine);
-
-  // Get path to atom.cmd
-  wchar_t path[MAX_PATH];
-  GetEnvironmentVariable(L"LOCALAPPDATA", path, ARRAY_SIZE(path));
-  // DBG("LOCALAPPDATA: %s\n", path);
-  wcscat(path, L"\\atom\\bin\\atom.cmd");
-
-  if (!PathFileExists(path)) {
-    MessageBox(NULL, L"Could not find atom.cmd", APP_NAME, MB_ICONERROR|MB_OK);
-    return 1;
-  }
+  DBG("lpCmdLine: %s\n", lpCmdLine);
 
   if (!is_elevated() && (!wcscmp(lpCmdLine,L"replace") || !wcscmp(lpCmdLine,L"restore"))) {
-    int opt = MessageBox(NULL, L"Depending on your UAC settings, you may get a prompt next to run replace-notepad.exe with administrator privileges. This is needed to perform the Notepad.exe redirection.\n\nNote that this will affect all users on this machine and is probably not suitable in a multi-user environment.\n\nContinue?", APP_NAME, MB_SYSTEMMODAL|MB_ICONINFORMATION|MB_YESNO);
+    int opt = MessageBox(NULL, L"Depending on your UAC settings, you may get a prompt to run replace-notepad.exe with administrator privileges. This is needed to setup the Notepad.exe redirection.\n\nNote that this will affect all users on this machine, so if there are multiple users on your machine, be sure to read the caveats in the package README first.\n\nContinue?", APP_NAME, MB_SYSTEMMODAL|MB_ICONINFORMATION|MB_YESNO);
     if (opt == IDNO) {
-      return 2;
+      return 1;
     }
     wchar_t path[MAX_PATH];
     GetModuleFileName(NULL, path, ARRAY_SIZE(path));
@@ -86,9 +75,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
       return 0; // success
     }
     else {
-      MessageBox(NULL, L"Could not elevate to redirect notepad.exe.", APP_NAME, MB_SYSTEMMODAL|MB_ICONERROR|MB_OK);
+      MessageBox(NULL, L"Could not redirect Notepad.exe.", APP_NAME, MB_SYSTEMMODAL|MB_ICONERROR|MB_OK);
     }
-    return 3;
+    return 1;
   }
 
   if (!wcscmp(lpCmdLine,L"replace")) {
@@ -109,6 +98,22 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
       MessageBox(NULL, L"Error restoring Notepad.", APP_NAME, MB_SYSTEMMODAL|MB_ICONERROR|MB_OK);
     }
     return 0;
+  }
+
+  // Get path to atom.cmd
+  wchar_t path[MAX_PATH];
+  GetEnvironmentVariable(L"LOCALAPPDATA", path, ARRAY_SIZE(path));
+  // DBG("LOCALAPPDATA: %s\n", path);
+  wcscat(path, L"\\atom\\bin\\atom.cmd");
+
+  if (!PathFileExists(path)) {
+    // Can't find atom.cmd. This can easily happen on a multi-user machine.
+    int opt = MessageBox(NULL, L"Could not find atom.cmd. Do you want to restore Notepad?", APP_NAME, MB_ICONERROR|MB_YESNO);
+    if (opt == IDYES) {
+      GetModuleFileName(NULL, path, ARRAY_SIZE(path));
+      ShellExecute(NULL, L"runas", path, L"restore", NULL, SW_SHOWNORMAL);
+    }
+    return 1;
   }
 
   wchar_t *start = lpCmdLine;
