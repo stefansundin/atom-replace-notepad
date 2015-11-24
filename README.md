@@ -1,6 +1,6 @@
 # replace-notepad
 
-Easily replace Notepad with Atom. 64-bit Windows only. Administrator privileges are required for a one-time setup.
+Easily replace Notepad with Atom. Administrator privileges are required for a one-time setup.
 
 After installing, use the menu: _Packages_ » _Replace Notepad_ » _Replace Notepad_.
 
@@ -18,3 +18,11 @@ If you want to compile `replace-notepad.exe` yourself, download [Cygwin](https:/
 Read these websites for more information:
 - http://blogs.msdn.com/b/greggm/archive/2005/02/21/377663.aspx
 - http://www.flos-freeware.ch/doc/notepad2-Replacement.html
+
+# Restoring Notepad
+
+If you forgot to restore Notepad and uninstalled Atom, you can easily restore it by running this command. In Windows 10, open an elevated command prompt by right-clicking on the start menu and then clicking _Command Prompt (Admin)_.
+
+```shell
+cmd /C reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f
+```
