@@ -54,7 +54,7 @@ int replace() {
 int restore() {
   int error = RegDeleteKeyEx(HKEY_LOCAL_MACHINE, L"Software\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\notepad.exe", 0, 0);
   if (error != ERROR_SUCCESS) {
-    MessageBox(NULL, L"RegDeleteKeyEx error: Could not open registry.", APP_NAME, MB_SYSTEMMODAL|MB_ICONWARNING|MB_OK);
+    MessageBox(NULL, L"RegDeleteKeyEx error: Could not open registry.\n\nNotepad is probably not replaced.", APP_NAME, MB_SYSTEMMODAL|MB_ICONWARNING|MB_OK);
     return 1;
   }
   return 0;
