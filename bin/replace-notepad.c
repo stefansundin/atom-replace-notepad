@@ -122,18 +122,22 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
   wchar_t *start = lpCmdLine;
   if (*start == '-') {
-    wchar_t args[MAX_PATH] = L"\"";
+    wchar_t args[MAX_PATH] = L"";
     start++;
     start++;
     while (*start != '\0') {
       if (*start == ' ') {
         start++;
-        wcscat(args, start);
+        if (*start == '"') {
+          wcscat(args, start);
+        }
+        else {
+          wsprintf(args, L"\"%s\"", start);
+        }
         break;
       }
       start++;
     }
-    wcscat(args, L"\"");
 
     // DBG("Launching: %s %s\n", path, args);
     ShellExecute(NULL, NULL, path, args, NULL, SW_HIDE);
