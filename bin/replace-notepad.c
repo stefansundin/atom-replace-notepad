@@ -5,6 +5,7 @@
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 #define APP_NAME      L"Atom replace-notepad"
 
+#ifdef DEBUG
 #define DBG(fmt, ...) { \
   wchar_t _path[MAX_PATH]; \
   GetModuleFileName(NULL, _path, ARRAY_SIZE(_path)); \
@@ -14,6 +15,9 @@
   fwprintf(_f, TEXT(fmt), ##__VA_ARGS__); \
   fclose(_f); \
 }
+#else
+#define DBG(...)
+#endif
 
 int is_elevated() {
   OSVERSIONINFO vi = { sizeof(OSVERSIONINFO) };
