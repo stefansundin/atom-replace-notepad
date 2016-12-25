@@ -120,31 +120,43 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     return 1;
   }
 
-  wchar_t *start = lpCmdLine;
-  if (*start == '-') {
-    wchar_t args[MAX_PATH] = L"";
-    start++;
-    start++;
-    while (*start != '\0') {
-      if (*start == ' ') {
-        start++;
-        if (*start == '"') {
-          wcscat(args, start);
-        }
-        else {
-          wsprintf(args, L"\"%s\"", start);
-        }
-        break;
-      }
-      start++;
-    }
-
-    // DBG("Launching: %s %s\n", path, args);
-    ShellExecute(NULL, NULL, path, args, NULL, SW_HIDE);
+  if (lpCmdLine[0] == '\0') {
+    MessageBox(NULL, L"No arguments were passed. Don't know what to do.", APP_NAME, MB_ICONWARNING|MB_OK);
     return 0;
   }
 
-  MessageBox(NULL, L"No arguments were passed. Don't know what to do.", APP_NAME, MB_ICONWARNING|MB_OK);
+  wchar_t *dash = wcsstr(lpCmdLine, L"- ");
+  if (dash == NULL) {
+    MessageBox(NULL, L"Error parsing lpCmdLine.", APP_NAME, MB_ICONERROR|MB_OK);
+    return 0;
+  }
 
+  // Copy any arguments that may be specified before the dash
+  dash[0] = '\0';
+  wchar_t args[MAX_PATH] = L"";
+  wcscpy(args, lpCmdLine);
+
+  // Skip "C:\WINDOWS\system32\NOTEPAD.EXE"
+  wchar_t *start = dash+2;
+  while (*start != '\0') {
+    if (*start == ' ') {
+      start++;
+      break;
+    }
+    start++;
+  }
+
+  // Copy the target file to the arguments
+  if (*start == '"') {
+    wcscat(args, start);
+  }
+  else {
+    wcscat(args, L"\"");
+    wcscat(args, start);
+    wcscat(args, L"\"");
+  }
+
+  // DBG("Launching: %s %s\n", path, args);
+  ShellExecute(NULL, NULL, path, args, NULL, SW_HIDE);
   return 0;
 }
